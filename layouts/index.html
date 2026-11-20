@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ .Site.Title }} — pure-Go tooling for binary formats, ELF first</title>
+<meta name="description" content="Pure-Go tooling for binary formats, starting with ELF: elfpatch edits an executable's interpreter, RUNPATH/RPATH and DT_NEEDED in place, with patchelf's flag names, atomic verified writes and no C toolchain. CGO_ENABLED=0.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+{{ partial "styles.html" . }}
+{{ partial "site-styles.html" . }}
+</head>
+<body class="lm">
+  <header class="nav"><div class="wrap">
+    <a class="brand" href="/"><img class="glyph" src="/img/logo.svg" width="32" height="32" alt="go-binfmt logo"> {{ .Site.Title }}</a>
+    {{ partial "theme-toggle.html" . }}
+  </div></header>
+  {{ partial "fork-ribbon.html" "https://github.com/go-binfmt" }}
+
+  <div class="hero"><div class="wrap">
+    <div>
+      <h1 class="head">Edit an ELF file<br><span class="accent">without a C toolchain.</span></h1>
+      <p class="sub">{{ if partial "mantra-on.html" . }}Go{{ else }}Pure-Go{{ end }} tooling for <strong>binary formats</strong>, ELF first: change an executable's <strong>interpreter</strong>, its <strong>RUNPATH</strong> or its <strong>DT_NEEDED</strong> entries with patchelf's flag names, from any host Go runs on, and have every write checked before it replaces the file.</p>
+      {{/* [[params.cta]] in hugo.toml: the kit renders the row */}}
+      {{ partial "cta.html" . }}
+      <div class="trust">{{ if not (partial "mantra-on.html" $) }}<span class="pill">CGO_ENABLED=0</span>{{ end }}
+      <span class="pill">patchelf's flag names</span>
+      <span class="pill">atomic, verified writes</span>
+      <span class="pill">tested against patchelf</span></div>
+    </div>
+    <div class="term">
+      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span class="t">zsh</span></div>
+<pre><span class="c-cmd">$ go install</span> github.com/go-binfmt/elfpatch/cmd/elfpatch@latest
+<span class="c-cmd">$ elfpatch</span> --print-rpath bin/tool
+<span class="c-cmd">$ elfpatch</span> --dry-run --set-rpath '$ORIGIN/lib' bin/tool
+<span class="c-com"># prints the change, writes nothing</span>
+<span class="c-cmd">$ elfpatch</span> --set-rpath '$ORIGIN/../lib' bin/tool</pre>
+    </div>
+  </div></div>
+
+  {{ with .Site.Params.repos }}<div class="strip"><div class="wrap">
+    <span class="lead-line">One organisation, <b>{{ len . }}</b> {{ if eq (len .) 1 }}repository{{ else }}repositories{{ end }}</span>
+    <div class="mods">{{ range . }}<a href="#repos">{{ .name }}</a>{{ end }}</div>
+  </div></div>{{ end }}
+
+  <section id="repos"><div class="wrap">
+    <span class="eyebrow">Repositories</span>
+    <h2>ELF, edited the way a linker would have written it.</h2>
+    <p class="lead">go-binfmt holds pure-Go tools for binary object and executable formats. The PE/COFF and UEFI side lives in <a href="https://github.com/go-coff">go-coff</a>; here the format is <strong>ELF</strong>, and the first tool is the one package builders reach for when a binary must run from a different prefix than the one it was linked for.</p>
+    <div class="grid">
+      {{ range .Site.Params.repos }}
+      <div class="card">
+        <h3>{{ .name }} <span class="tag {{ cond (eq .status "ready") "ready" "active" }}">{{ cond (eq .status "ready") "ready" "not yet" }}</span></h3>
+        <p>{{ .blurb | markdownify }}</p>
+        <p><a href="{{ .url }}">repo →</a>{{ if .pkg }} · <a href="https://pkg.go.dev/{{ .pkg }}">pkg.go.dev</a>{{ end }}</p>
+      </div>
+      {{ end }}
+    </div>
+  </div></section>
+
+  <section id="eco" style="padding-top:6px"><div class="wrap">
+    <div class="band">
+      <h2>Binary tooling that ships like Go.</h2>
+      <p>No cgo, no binutils, no patchelf to install first. One static binary, and a library behind it.</p>
+      <a class="btn btn-ghost" href="https://github.com/go-binfmt">{{ partial "icons/github.html" . }}Read the source on GitHub →</a>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap"><span>© the go-binfmt authors{{ if not (partial "mantra-on.html" $) }} · BSD-3-Clause{{ end }}</span><span>{{ if not (partial "mantra-on.html" $) }}Pure Go · CGO_ENABLED=0 · {{ end }}<a href="https://github.com/go-binfmt">github.com/go-binfmt</a></span></div></footer>
+</body>
+</html>

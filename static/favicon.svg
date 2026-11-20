@@ -1,0 +1,16 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="go-binfmt">
+  <!-- An ELF file as its program headers see it: the header table down the left, the loadable segments it maps on the right, one tall and one short. -->
+  <defs>
+    <linearGradient id="gocyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22CCE2"/>
+      <stop offset="1" stop-color="#0079A8"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#gocyan)"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="60" y="56" width="136" height="144" rx="14"/>
+    <path d="M84 86h20M84 112h20M84 138h20M84 164h20"/>
+    <rect x="124" y="82" width="54" height="52" rx="6"/>
+    <rect x="124" y="156" width="54" height="26" rx="6"/>
+  </g>
+</svg>
