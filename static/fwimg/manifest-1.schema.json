@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://go-binfmt.github.io/fwimg/manifest-1.schema.json",
+  "title": "fwimg image manifest",
+  "description": "The layout of a firmware image and the hashes to check it by, written by fwimg --manifest and fwimg info --json, read by fwimg verify. Version 1.",
+  "type": "object",
+  "required": ["$schema", "schema_version", "fwimg_version", "format", "base", "entry", "pad", "size", "data_size", "crc32", "sha256", "segments"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"const": "https://go-binfmt.github.io/fwimg/manifest-1.schema.json"},
+    "schema_version": {"const": 1, "description": "Raised by a change that renames, removes or re-means a field; adding one keeps it."},
+    "fwimg_version": {"type": "string", "description": "The fwimg that wrote the manifest: a tag, or dev."},
+    "created": {"type": "string", "format": "date-time", "description": "Present only when SOURCE_DATE_EPOCH was set: that instant, UTC."},
+    "format": {"enum": ["elf", "ihex", "srec", "uimage", "binary"], "description": "The format of the file the image was read from or written to."},
+    "source": {"$ref": "#/$defs/source"},
+    "base": {"$ref": "#/$defs/address", "description": "The lowest address of the image."},
+    "entry": {"oneOf": [{"$ref": "#/$defs/address"}, {"type": "null"}], "description": "The start address, null when the image has none."},
+    "pad": {"type": "integer", "minimum": 0, "maximum": 255, "description": "The byte the image holds where no segment does."},
+    "size": {"$ref": "#/$defs/size", "description": "Bytes from the lowest to the highest address, gaps included: the length of the flat binary."},
+    "data_size": {"$ref": "#/$defs/size", "description": "Bytes the segments hold, gaps excluded."},
+    "crc32": {"$ref": "#/$defs/crc32", "description": "CRC-32 (IEEE) of the flat image."},
+    "sha256": {"$ref": "#/$defs/sha256", "description": "SHA-256 of the flat image."},
+    "segments": {"type": "array", "maxItems": 65536, "items": {"$ref": "#/$defs/segment"}, "description": "Sorted by address, disjoint, inside base..base+size."},
+    "regions": {"type": "array", "maxItems": 65536, "items": {"$ref": "#/$defs/region"}},
+    "sections": {"type": "array", "maxItems": 65536, "items": {"$ref": "#/$defs/section"}, "description": "The allocated sections of an ELF source."},
+    "uimage": {"$ref": "#/$defs/uimage"}
+  },
+  "$defs": {
+    "address": {"type": "string", "pattern": "^0x(0|[1-9a-f][0-9a-f]{0,15})$", "description": "0x and lowercase hex, no leading zero, at most 64 bits."},
+    "size": {"type": "integer", "minimum": 0},
+    "crc32": {"type": "string", "pattern": "^[0-9a-f]{8}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source": {
+      "type": "object",
+      "required": ["file", "format", "size", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "file": {"type": "string", "description": "The base name of the input file."},
+        "format": {"enum": ["elf", "ihex", "srec", "uimage", "binary"]},
+        "size": {"$ref": "#/$defs/size"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "segment": {
+      "type": "object",
+      "required": ["address", "size", "source", "crc32", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "address": {"$ref": "#/$defs/address"},
+        "size": {"type": "integer", "minimum": 1},
+        "source": {"type": "string", "description": "The base name of the input file, empty when the image was not read from one."},
+        "crc32": {"$ref": "#/$defs/crc32"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "region": {
+      "type": "object",
+      "required": ["name", "address", "size", "data_address", "data_size", "crc32", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "address": {"$ref": "#/$defs/address"},
+        "size": {"$ref": "#/$defs/size"},
+        "data_address": {"$ref": "#/$defs/address", "description": "The first byte of the image inside the region."},
+        "data_size": {"$ref": "#/$defs/size", "description": "From the first to the last byte of the image inside the region, 0 when there is none."},
+        "crc32": {"$ref": "#/$defs/crc32"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": ["name", "address", "size", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "address": {"$ref": "#/$defs/address"},
+        "size": {"$ref": "#/$defs/size"},
+        "type": {"type": "integer", "minimum": 0, "maximum": 4294967295, "description": "sh_type."}
+      }
+    },
+    "uimage": {
+      "type": "object",
+      "required": ["name", "os", "arch", "type", "compression", "time", "load", "entry"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "os": {"type": "integer", "minimum": 0, "maximum": 255},
+        "arch": {"type": "integer", "minimum": 0, "maximum": 255},
+        "type": {"type": "integer", "minimum": 0, "maximum": 255},
+        "compression": {"type": "integer", "minimum": 0, "maximum": 255},
+        "time": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "load": {"$ref": "#/$defs/address"},
+        "entry": {"$ref": "#/$defs/address"}
+      }
+    }
+  }
+}
