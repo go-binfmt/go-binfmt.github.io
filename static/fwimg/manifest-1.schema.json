@@ -11,7 +11,7 @@
     "schema_version": {"const": 1, "description": "Raised by a change that renames, removes or re-means a field; adding one keeps it."},
     "fwimg_version": {"type": "string", "description": "The fwimg that wrote the manifest: a tag, or dev."},
     "created": {"type": "string", "format": "date-time", "description": "Present only when SOURCE_DATE_EPOCH was set: that instant, UTC."},
-    "format": {"enum": ["elf", "ihex", "srec", "uimage", "binary"], "description": "The format of the file the image was read from or written to."},
+    "format": {"enum": ["elf", "ihex", "srec", "uimage", "uf2", "verilog", "binary"], "description": "The format of the file the image was read from or written to."},
     "source": {"$ref": "#/$defs/source"},
     "base": {"$ref": "#/$defs/address", "description": "The lowest address of the image."},
     "entry": {"oneOf": [{"$ref": "#/$defs/address"}, {"type": "null"}], "description": "The start address, null when the image has none."},
@@ -36,7 +36,7 @@
       "additionalProperties": false,
       "properties": {
         "file": {"type": "string", "description": "The base name of the input file."},
-        "format": {"enum": ["elf", "ihex", "srec", "uimage", "binary"]},
+        "format": {"enum": ["elf", "ihex", "srec", "uimage", "uf2", "verilog", "binary"]},
         "size": {"$ref": "#/$defs/size"},
         "sha256": {"$ref": "#/$defs/sha256"}
       }
