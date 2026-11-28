@@ -26,7 +26,7 @@ disableKinds = ["taxonomy", "term", "RSS", "sitemap", "404"]
   pkg = "github.com/go-binfmt/fwimg"
   url = "https://github.com/go-binfmt/fwimg"
   status = "ready"
-  blurb = "Converts an ELF executable into the image a bootloader or ROM loads at a fixed address: a **flat binary** (`objcopy -O binary`), a **Motorola S-record**, **Intel HEX**, a **U-Boot uImage** (gzip or lz4 too), a **UF2** file or a **Verilog hex** memory file, with no binutils or `mkimage` on the build host. The input is untrusted, so an image size taken from attacker-controlled addresses, a segment outside the input, an address range that wraps and data past 4 GiB are all **refused**, never truncated. It also runs **in your browser** as WebAssembly, and the [docs playground](https://go-binfmt.github.io/docs/latest/fwimg-playground/) never uploads your file. It moved here from `go-coff/peln/fwimg`."
+  blurb = "Converts an ELF executable into the image a bootloader or ROM loads at a fixed address: a **flat binary** (`objcopy -O binary`), a **Motorola S-record**, **Intel HEX**, a **U-Boot uImage** (gzip or lz4 too), a [**FIT**](https://go-binfmt.github.io/docs/latest/fwimg/#fit) (written 2.7x to 7.1x faster than `mkimage -f`), a **UF2** file or a **Verilog hex** memory file, with no binutils or `mkimage` on the build host. The input is untrusted, so an image size taken from attacker-controlled addresses, a segment outside the input, an address range that wraps and data past 4 GiB are all **refused**, never truncated. It also runs **in your browser** as WebAssembly, and the [docs playground](https://go-binfmt.github.io/docs/latest/fwimg-playground/) never uploads your file. It moved here from `go-coff/peln/fwimg`."
 
 [[params.repos]]
   name = "fdt"
